@@ -20,10 +20,15 @@ handle_call({send, Name, Msg}, _, State=#state{name = OwnName}) ->
 			case NodeId of
 				{ok, TargetId} ->
 					%Resp = rpc:call({global, TargetId}, client, recv, [OwnName, Msg]),
-					Resp = gen_server:call({global, TargetId}, {recv, OwnName, Msg}),
-					{reply, Resp, State};
-				{failed, Msg} ->
-					{reply, {failed, Msg}, State}
+					try gen_server:call({global, TargetId}, {recv, OwnName, Msg}) of
+						Resp ->
+							{reply, Resp, State}
+					catch
+						_:_ ->
+							{reply, {failed, "Failed to Send"}, State}
+					end;
+				{failed, ErrMsg} ->
+					{reply, {failed, ErrMsg}, State}
 				end
 		end;
 handle_call({recv, FromName, Msg}, _, State=#state{}) ->
@@ -51,12 +56,12 @@ get_peer(Name) ->
 				TargetId ->
 					{ok, TargetId}
 			catch
-				_ -> 
+				_:_ -> 
 					{failed, "Target Not Found"}
 			end
 	catch
 		throw:not_found -> 
-			{failed, "Target Not Found"}
+			{failed, "No one has logged in"}
 	end.
 
 get_list() ->
