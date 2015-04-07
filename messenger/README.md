@@ -1,6 +1,6 @@
 Messenger
 ====
-Messenger based on module gen_server on Erlang, Contains a Login Server, Messages are sent in P2P among Clients.
+Messenger based on module gen_server in Erlang. Contains a Login Server, Messages are sent P2P among Clients.
 
 Configuration
 ====
