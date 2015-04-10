@@ -5,7 +5,8 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+                  leo_ordning_reda
                  ]},
   {mod, { file_sender_app, []}},
   {env, []}
